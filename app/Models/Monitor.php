@@ -10,12 +10,12 @@ class Monitor extends Model
     use HasFactory;
     protected $fillable = [
         'description',
-        'phoneNumber',
+        'phone_number',
         'url_img_profile',
     ];
 
     protected $casts = [
-        'phoneNumber' => 'integer',
+        'phone_number' => 'integer',
     ];
 
 }

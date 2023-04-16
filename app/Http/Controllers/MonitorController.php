@@ -18,7 +18,7 @@ class MonitorController extends Controller
 
 
 
-    public function index()
+    public function showAll()
     {
         //
         $product = Monitor::all();
@@ -31,7 +31,7 @@ class MonitorController extends Controller
 
         $validator = validator::make($request->all(), [
             'description' => 'required|string|max:255',
-            'phoneNumber' => 'required|max:20',
+            'phone_number' => 'required|max:20',
             'url_img_profile' => 'required|string|max:255',
         ]);
 
@@ -41,12 +41,32 @@ class MonitorController extends Controller
 
         $monitor = Monitor::create([
             'description' => $request->description,
-            'phoneNumber' => $request->phoneNumber,
+            'phone_number' => $request->phone_number,
             'url_img_profile' => $request->url_img_profile
         ]);
 
 
         return response()
             ->json(['data' => $monitor,]);
+    }
+
+    public function changeImg(Request $request)
+    {
+        $monitor = Monitor::findOrFail($request->id);
+
+        $monitor-> url_img_profile = $request->url_img_profile;
+        $monitor->save();
+
+        return response()
+            ->json(['data' => $monitor,]);
+    }
+
+    public function deleteMonitor(Request $request)
+    {
+        $monitor = Monitor::findOrFail($request->id);
+        $monitor->delete();
+
+        return response()
+            ->json(['status' => 'eliminado',]);
     }
 }

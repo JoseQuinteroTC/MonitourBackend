@@ -21,12 +21,21 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('products', [ProductController::class, "index"]);
-Route::get('monitores/{id}', [MonitorController::class, "mostrarImagen"]);
-Route::get('monitores', [MonitorController::class, "index"]);
+//Auth
 Route::post('register', [AuthController::class, "register"]);
-Route::post('registerMonitor', [MonitorController::class, "addMonitorInfo"]);
 Route::post('login', [AuthController::class, "login"]);
+
+//Monitor
+Route::post('registerMonitor', [MonitorController::class, "addMonitorInfo"]);
+Route::post('updateMonitor', [MonitorController::class, "changeImg"]);
+Route::post('deleteMonitor', [MonitorController::class, "deleteMonitor"]);
+Route::get('monitores/{id}', [MonitorController::class, "mostrarImagen"]);
+Route::get('monitores', [MonitorController::class, "showAll"]);
+
+//other
+Route::get('products', [ProductController::class, "index"]);
+
+
 
 
 Route::middleware('auth:sanctum')->group( function() {
