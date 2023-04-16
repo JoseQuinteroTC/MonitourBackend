@@ -23,8 +23,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('products', [ProductController::class, "index"]);
 Route::get('monitores/{id}', [MonitorController::class, "mostrarImagen"]);
-Route::get('monitores', [MonitorController::class, "allMonitors2"]);
+Route::get('monitores', [MonitorController::class, "index"]);
 Route::post('register', [AuthController::class, "register"]);
+Route::post('registerMonitor', [MonitorController::class, "addMonitorInfo"]);
 Route::post('login', [AuthController::class, "login"]);
 
 

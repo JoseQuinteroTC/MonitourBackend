@@ -7,56 +7,46 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Imagen;
+use Illuminate\Support\Facades\Validator;
 use stdClass;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class MonitorController extends Controller
 {
 
 
-    public function mostrarImagen($id)
+
+    public function index()
     {
-        $imagen = Monitor::find($id);
-        if ($imagen) {
-            return response($imagen->img_profile)
-                ->header('Content-Type', 'image/jpg');
-        } else {
-            return response('Imagen no encontrada', 404);
-        }
+        //
+        $product = Monitor::all();
+
+        return $product;
     }
 
-    public function allMonitors()
+    public function addMonitorInfo(Request $request)
     {
-        $monitors = Monitor::all();
-        $datos = array();
 
-        foreach ($monitors as $monitors) {
-            $objeto = new stdClass();
-            $objeto->id = $monitors->id;
-            $objeto->description = $monitors->description;
-            $objeto->phoneNumber = $monitors->phoneNumber;
-            $objeto->img_profile = response($monitors->img_profile)
-            ->header('Content-Type', 'image/jpg'); // Convertir la imagen a base64
-            $datos[] = $objeto;
+        $validator = validator::make($request->all(), [
+            'description' => 'required|string|max:255',
+            'phoneNumber' => 'required|max:20',
+            'url_img_profile' => 'required|string|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 401);
         }
 
-        return response()->json($datos);
+        $monitor = Monitor::create([
+            'description' => $request->description,
+            'phoneNumber' => $request->phoneNumber,
+            'url_img_profile' => $request->url_img_profile
+        ]);
 
-    }
 
-    public function allMonitors2()
-    {
-        $monitors = Monitor::all();
-        $datos = array();
-
-        foreach ($monitors as $monitors) {
-            $objeto = new stdClass();
-            $objeto->id = $monitors->id;
-            $objeto->description = $monitors->description;
-            $objeto->phoneNumber = $monitors->phoneNumber;
-            $objeto->img_profile = asset('profile.jpg'); // Convertir la imagen a base64
-            $datos[] = $objeto;
-        }
-
-        return response()->json($datos);
+        return response()
+            ->json(['data' => $monitor,]);
     }
 }

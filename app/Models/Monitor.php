@@ -8,6 +8,14 @@ use File;
 class Monitor extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'description',
+        'phoneNumber',
+        'url_img_profile',
+    ];
 
+    protected $casts = [
+        'phoneNumber' => 'integer',
+    ];
 
 }
