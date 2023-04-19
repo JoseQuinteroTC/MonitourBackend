@@ -50,6 +50,9 @@ class AuthController extends Controller
         $user = User::where('email', $request['email'])->firstOrFail();
         $token = $user->createToken('auth_token')->plainTextToken;
 
+        // $user->remember_token = $token;
+        // $user->save();
+
         return response()->json([
                 'message' => 'Bienvenido ' . $user->name,
                 'access_token' => $token,

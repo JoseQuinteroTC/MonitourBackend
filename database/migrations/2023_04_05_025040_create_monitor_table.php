@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id('id');
             $table->string('description');
             $table->bigInteger('phone_number');
-            $table->binary('url_img_profile');
+            $table->string('url_img_profile');
             $table->timestamps();
 
         });
