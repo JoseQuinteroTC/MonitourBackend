@@ -44,14 +44,14 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         if (!Auth::attempt($request->only('email', 'password'))) {
-            return response()->json(['Mensaje' => 'Sin autorizacion'], 401);
+            return response()->json(['Mensaje' => 'Correo o contraseña invalidos'], 401);
         }
 
         $user = User::where('email', $request['email'])->firstOrFail();
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        // $user->remember_token = $token;
-        // $user->save();
+        $user->remember_token = $token;
+        $user->save();
 
         return response()->json([
                 'message' => 'Bienvenido ' . $user->name,

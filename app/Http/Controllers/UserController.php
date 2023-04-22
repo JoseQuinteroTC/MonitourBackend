@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -25,15 +26,15 @@ class UserController extends Controller
         $user = User::find($id);
 
         return response()
-            ->json(['data' => $user,]);
+            ->json($user);
     }
 
-    public function showToken(Request $request)
+    public function showToken($token)
     {
-        $user = auth()->user();
+        $user = User::where('remember_token', $token )->get();
 
         return response()
-            ->json(['data' => $user,]);
+            ->json($user);
     }
 
     public function findName($name)
@@ -42,7 +43,7 @@ class UserController extends Controller
         $user = User::where('name', $name )->get();
 
         return response()
-            ->json(['data' => $user,]);
+            ->json($user);
     }
 
     //update
@@ -51,7 +52,7 @@ class UserController extends Controller
     {
         $user = User::findOrFail($request->id);
 
-        $user->password = $request->password;
+        $user->password = Hash::make($request->password);
         $user->save();
 
         return response()
@@ -64,7 +65,7 @@ class UserController extends Controller
 
         $user->name = $request->name;
         $user->lastName = $request->lastName;
-        $user->password = $request->password;
+        $user->email = $request->email;
         $user->save();
 
         return response()

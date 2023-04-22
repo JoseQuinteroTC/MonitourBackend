@@ -32,6 +32,7 @@ Route::post('deleteUser/{id}', [UserController::class, "deleteUser"]);
 Route::get('showUsers', [UserController::class, "showAll"]);
 Route::get('userName/{name}', [UserController::class, "findName"]);
 Route::get('user/{id}', [UserController::class, "showId"]);
+Route::get('userToken/{token}', [UserController::class, "showToken"]);
 
 //Monitor
 Route::post('registerMonitor', [MonitorController::class, "addMonitorInfo"]);//create
@@ -48,6 +49,4 @@ Route::get('products', [ProductController::class, "index"]);
 
 Route::middleware('auth:sanctum')->group( function() {
     Route::get('logout', [AuthController::class, "logout"]);
-    Route::get('userToken', [UserController::class, "showToken"]);
-
 });
