@@ -26,6 +26,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('register', [AuthController::class, "register"]);
 Route::post('login', [AuthController::class, "login"]);
 Route::post('updateData', [UserController::class, "updateData"]);
+Route::post('updatePassword', [UserController::class, "changePassword"]);
 //Route::post('changeFullName', [UserController::class, "changeFullName"]);
 Route::post('deleteUser/{id}', [UserController::class, "deleteUser"]);
 
@@ -38,7 +39,6 @@ Route::get('userToken/{token}', [UserController::class, "showToken"]);
 Route::post('registerMonitor', [MonitorController::class, "addMonitorInfo"]);//create
 Route::post('updateMonitor', [MonitorController::class, "changeImg"]);//update
 Route::post('deleteMonitor', [MonitorController::class, "deleteMonitor"]);//delete
-Route::get('monitores/{id}', [MonitorController::class, "mostrarImagen"]);//read
 Route::get('monitores', [MonitorController::class, "showAll"]);//read
 
 //Other

@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
+use \stdClass;
+
 
 class UserController extends Controller
 {
@@ -31,7 +35,7 @@ class UserController extends Controller
 
     public function showToken($token)
     {
-        $user = User::where('remember_token', $token )->get();
+        $user = User::where('remember_token', $token)->get();
 
         return response()
             ->json($user);
@@ -40,7 +44,7 @@ class UserController extends Controller
     public function findName($name)
     {
 
-        $user = User::where('name', $name )->get();
+        $user = User::where('name', $name)->get();
 
         return response()
             ->json($user);
@@ -52,16 +56,34 @@ class UserController extends Controller
     {
         $user = User::findOrFail($request->id);
 
-        $user->password = Hash::make($request->password);
-        $user->save();
+
+
+        // if ($user->password == $request->password) {
+        if (Hash::check($request->password, $user->password)) {
+            $user->password = Hash::make($request->newPassword);
+            $user->save();
+            return response()
+                ->json(['data' => $user,]);
+        }
 
         return response()
-            ->json(['data' => $user,]);
+            ->json(['La contraseña actual no es la correcta'], 401);
     }
 
     public function updateData(Request $request)
     {
         $user = User::findOrFail($request->id);
+
+        if ($user->email != $request->email) {
+            $validator = validator::make($request->all(), [
+                'email' => 'required|unique:users',
+            ]);
+            if ($validator->fails()) {
+                return response()->json("Ya existe un usuario con el correo ingresado", 401);
+            }
+        }
+
+
 
         $user->name = $request->name;
         $user->lastName = $request->lastName;
