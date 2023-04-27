@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('monitorias', function (Blueprint $table) {
             $table->id();
+            $table->integer('idMonitor');
+            $table->bigInteger('price');
+            $table->string('description');
+            $table->string('title');
             $table->timestamps();
         });
     }

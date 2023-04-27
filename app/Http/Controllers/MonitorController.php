@@ -46,6 +46,7 @@ class MonitorController extends Controller
         }
 
         $monitor = Monitor::create([
+            'id' => $request->id,
             'name' => $request->name,
             'lastName' => $request->lastName,
             'email' => $request->email,
@@ -55,6 +56,29 @@ class MonitorController extends Controller
             'url_img_profile' => $request->url_img_profile,
         ]);
 
+
+        return response()
+            ->json(['data' => $monitor,]);
+    }
+
+    public function updateData(Request $request)
+    {
+        $monitor = Monitor::findOrFail($request->id);
+
+        if ($monitor->email != $request->email) {
+            $validator = validator::make($request->all(), [
+                'email' => 'required|unique:users',
+            ]);
+            if ($validator->fails()) {
+                return response()->json("Ya existe un usuario con el correo ingresado", 401);
+            }
+        }
+
+
+        $monitor->email = $request->email;
+        $monitor->description = $request->description;
+        $monitor->phone_number = $request->phone_number;
+        $monitor->save();
 
         return response()
             ->json(['data' => $monitor,]);
@@ -78,5 +102,13 @@ class MonitorController extends Controller
 
         return response()
             ->json(['status' => 'eliminado',]);
+    }
+
+    public function findName($name)
+    {
+        $monitor = Monitor::where('name' , $name)->get();
+
+        return response()
+            ->json($monitor);
     }
 }
