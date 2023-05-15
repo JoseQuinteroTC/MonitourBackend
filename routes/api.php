@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MonitorController;
+use App\Http\Controllers\MonitoriasController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -40,6 +41,18 @@ Route::post('registerMonitor', [MonitorController::class, "addMonitorInfo"]);//c
 Route::post('updateMonitor', [MonitorController::class, "changeImg"]);//update
 Route::post('deleteMonitor', [MonitorController::class, "deleteMonitor"]);//delete
 Route::get('monitores', [MonitorController::class, "showAll"]);//read
+
+Route::get('monitorias', [MonitoriasController::class, "showAll"]);//read
+Route::get('qr/{phone_number}', [MonitoriasController::class, "qr"]);//read
+Route::get('name/{name}', [MonitoriasController::class, "findName"]);//read
+Route::get('monitorias/{idMonitor}', [MonitoriasController::class, "findMonitorias"]);//read
+Route::post('registerMonitoria', [MonitoriasController::class, "addMonitoriaInfo"]);//read
+Route::post('moodificarMonitoria', [MonitoriasController::class, "updateData"]);//read
+Route::post('deleteMonitoria/{id}', [MonitoriasController::class, "delete"]);//read
+
+Route::get('email', [UserController::class, "email"]);//read
+Route::get('/verify-email/{id}/{hash}', 'VerificationController@verify')->name('verification.verify');
+
 
 //Other
 Route::get('products', [ProductController::class, "index"]);

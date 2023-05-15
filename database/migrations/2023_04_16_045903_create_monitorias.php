@@ -12,14 +12,22 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('monitorias', function (Blueprint $table) {
+
             $table->id();
-            $table->integer('idMonitor');
-            $table->bigInteger('price');
-            $table->string('description');
-            $table->string('title');
+            $table->integer('idMonitor');//x
+            $table->integer('views');//x
+            $table->integer('request');//x
+            $table->bigInteger('price');//x
+            $table->string('course');//x
+            $table->string('modality');//x
+            $table->string('description');//x
             $table->timestamps();
         });
+
+
     }
+
+
 
     /**
      * Reverse the migrations.

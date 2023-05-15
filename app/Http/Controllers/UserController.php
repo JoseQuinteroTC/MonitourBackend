@@ -3,11 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Monitor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use \stdClass;
+use App\Mail\WelcomeMail;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\message;
 
 
 class UserController extends Controller
@@ -28,15 +32,22 @@ class UserController extends Controller
     public function showId($id)
     {
         $user = User::find($id);
+        $monitor = Monitor::where('id', $user->id)->get();
 
         return response()
-            ->json($user);
+            ->json(['usuario' =>$user, 'monitor' => $monitor]);
     }
 
     public function showToken($token)
     {
-        $user = User::where('remember_token', $token)->get();
+        $user = User::where('remember_token', $token)->first();
 
+        $monitor = Monitor::where('id', $user->id)->first();
+
+        if ($monitor) {
+            return response()
+            ->json($monitor);
+        }
         return response()
             ->json($user);
     }
@@ -83,8 +94,6 @@ class UserController extends Controller
             }
         }
 
-
-
         $user->name = $request->name;
         $user->lastName = $request->lastName;
         $user->email = $request->email;
@@ -104,5 +113,22 @@ class UserController extends Controller
 
         return response()
             ->json(['status' => 'eliminado',]);
+    }
+
+    public function email(Request $request)
+    {
+        // Código para registrar al usuario
+        // ...
+
+        // Enviar correo de bienvenida utilizando una plantilla HTML
+        $user = User::find($request->id);
+        $data = array('name' => "hola");
+        Mail::send('emails.welcome', $data, function($message) use ($user) {
+            $message->to("monitour04@gmail.com", "hola")
+                    ->subject('Bienvenido a mi sitio web');
+        });
+
+        return  response()
+        ->json(['status' => 'eliminado',]);
     }
 }
