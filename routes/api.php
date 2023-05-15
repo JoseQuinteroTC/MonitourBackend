@@ -47,7 +47,7 @@ Route::get('qr/{phone_number}', [MonitoriasController::class, "qr"]);//read
 Route::get('name/{name}', [MonitoriasController::class, "findName"]);//read
 Route::get('monitorias/{idMonitor}', [MonitoriasController::class, "findMonitorias"]);//read
 Route::post('registerMonitoria', [MonitoriasController::class, "addMonitoriaInfo"]);//read
-Route::post('moodificarMonitoria', [MonitoriasController::class, "updateData"]);//read
+Route::post('modificarMonitoria', [MonitoriasController::class, "updateData"]);//read
 Route::post('deleteMonitoria/{id}', [MonitoriasController::class, "delete"]);//read
 
 Route::get('email', [UserController::class, "email"]);//read
