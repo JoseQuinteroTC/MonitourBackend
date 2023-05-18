@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use stdClass;
 use App\Http\Controllers\str;
 use App\Http\Controllers\mail;
+use App\Models\Monitor;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -26,9 +27,12 @@ class MonitoriasController extends Controller
     public function showAll()
     {
         //
-        $product = Monitoria::all();
 
-        return $product;
+        $monitoria = Monitoria::all();
+
+
+        return response()
+            ->json($monitoria);
     }
     public function findName($title)
     {
@@ -41,10 +45,12 @@ class MonitoriasController extends Controller
     public function addMonitoriaInfo(Request $request)
     {
 
+        $monitor = Monitor::findOrFail($request->idMonitor);
+
         $validator = validator::make($request->all(), [
             'course' => 'required|string|max:255',
-            'idMonitor' => 'required|max:20',
             'price' => 'required|max:20',
+            'idMonitor' => 'required|max:20',
             'description' => 'required|string|max:255',
             'modality' => 'required|string|max:255',
         ]);
@@ -54,6 +60,7 @@ class MonitoriasController extends Controller
         }
 
         $monitoria = Monitoria::create([
+            'monitor' => $monitor->name. ' '. $monitor->lastName ,
             'idMonitor' => $request->idMonitor,
             'course' => $request->course,
             'price' => $request->price,
@@ -83,9 +90,9 @@ class MonitoriasController extends Controller
 
         }
 
-        $monitoria->name = $request->name;
-        $monitoria->lastName = $request->lastName;
-        $monitoria->email = $request->email;
+        $monitoria->course = $request->course;
+        $monitoria->price = $request->price;
+        $monitoria->description = $request->description;
         $monitoria->modality = $request->modality;
         $monitoria->save();
 
@@ -110,6 +117,13 @@ class MonitoriasController extends Controller
     public function findMonitorias($idMonitor)
     {
         $monitoria = Monitoria::where('idMonitor', $idMonitor)->get();
+
+        return response()
+            ->json($monitoria);
+    }
+    public function findMonitoriasName($course)
+    {
+        $monitoria = Monitoria::where('course','LIKE', $course . '%' )->get();
 
         return response()
             ->json($monitoria);

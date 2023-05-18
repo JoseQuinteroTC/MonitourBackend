@@ -10,13 +10,15 @@ class Monitoria extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title',
         'course',
+        'monitor',
         'idMonitor',
         'price',
         'description',
-        'monitor',
+        'modality',
+        'views',
+        'request',
 
     ];
-    
+
 }

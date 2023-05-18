@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use \stdClass;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Monitor;
 
 
 class AuthController extends Controller
@@ -52,6 +53,17 @@ class AuthController extends Controller
 
         $user->remember_token = $token;
         $user->save();
+
+        $monitor = Monitor::where('id', $user->id)->first();
+
+        if ($monitor) {
+            return response()->json([
+                'message' => 'Bienvenido ' . $user->name,
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+                'user' => $monitor,
+            ]);
+        }
 
         return response()->json([
                 'message' => 'Bienvenido ' . $user->name,

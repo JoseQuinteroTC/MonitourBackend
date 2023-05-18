@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Monitor;
+use App\Models\Monitoria;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -17,9 +18,6 @@ use Illuminate\Support\Facades\message;
 class UserController extends Controller
 {
     //create
-
-
-
     //read
 
     public function showAll()
@@ -35,7 +33,7 @@ class UserController extends Controller
         $monitor = Monitor::where('id', $user->id)->get();
 
         return response()
-            ->json(['usuario' =>$user, 'monitor' => $monitor]);
+            ->json(['usuario' => $user, 'monitor' => $monitor]);
     }
 
     public function showToken($token)
@@ -46,7 +44,7 @@ class UserController extends Controller
 
         if ($monitor) {
             return response()
-            ->json($monitor);
+                ->json($monitor);
         }
         return response()
             ->json($user);
@@ -55,7 +53,7 @@ class UserController extends Controller
     public function findName($name)
     {
 
-        $user = User::where('name', $name)->get();
+        $user = User::where('name', 'LIKE', '%' . $name)->get();
 
         return response()
             ->json($user);
@@ -85,13 +83,28 @@ class UserController extends Controller
     {
         $user = User::findOrFail($request->id);
 
-        if ($user->email != $request->email) {
+        $monitor = Monitor::where('id', $request->id)->first();
+
+
+        if ($user->email != $request->email || $monitor->email != $request->email) {
             $validator = validator::make($request->all(), [
                 'email' => 'required|unique:users',
             ]);
             if ($validator->fails()) {
                 return response()->json("Ya existe un usuario con el correo ingresado", 401);
             }
+        }
+
+        if ($monitor) {
+            $monitor->name = $request->name;
+            $monitor->lastName = $request->lastName;
+            $monitor->email = $request->email;
+            $monitor->description = $request->description;
+            $monitor->phone_number = $request->phone_number;
+            $monitor->save();
+
+            return response()
+            ->json(['data' => $monitor,]);
         }
 
         $user->name = $request->name;
@@ -111,6 +124,13 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         $user->delete();
 
+        $monitor = Monitor::where('id', $user->id)->first();
+
+        if ($monitor) {
+            $monitor->delete();
+
+        }
+
         return response()
             ->json(['status' => 'eliminado',]);
     }
@@ -123,12 +143,12 @@ class UserController extends Controller
         // Enviar correo de bienvenida utilizando una plantilla HTML
         $user = User::find($request->id);
         $data = array('name' => "hola");
-        Mail::send('emails.welcome', $data, function($message) use ($user) {
+        Mail::send('emails.welcome', $data, function ($message) use ($user) {
             $message->to("monitour04@gmail.com", "hola")
-                    ->subject('Bienvenido a mi sitio web');
+                ->subject('Bienvenido a mi sitio web');
         });
 
         return  response()
-        ->json(['status' => 'eliminado',]);
+            ->json(['status' => 'eliminado',]);
     }
 }

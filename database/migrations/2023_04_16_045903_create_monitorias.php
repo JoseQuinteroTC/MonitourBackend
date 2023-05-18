@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('monitorias', function (Blueprint $table) {
 
             $table->id();
+            $table->string('monitor');//x
             $table->integer('idMonitor');//x
             $table->integer('views');//x
             $table->integer('request');//x

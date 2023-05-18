@@ -28,17 +28,14 @@ class MonitorController extends Controller
 
     public function addMonitorInfo(Request $request)
     {
+        $user = User::findOrFail($request->id);
 
         $validator = validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'lastName' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
+
             'description' => 'required|string|max:255',
             'phone_number' => 'required|max:20',
             'document' => 'required|max:20',
             'url_img_profile' => 'required|string|max:255',
-
-
         ]);
 
         if ($validator->fails()) {
@@ -46,10 +43,10 @@ class MonitorController extends Controller
         }
 
         $monitor = Monitor::create([
-            'id' => $request->id,
-            'name' => $request->name,
-            'lastName' => $request->lastName,
-            'email' => $request->email,
+            'id' => $user->id,
+            'name' => $user->name,
+            'lastName' => $user->lastName,
+            'email' => $user->email,
             'description' => $request->description,
             'phone_number' => $request->phone_number,
             'document' => $request->document,
@@ -106,7 +103,7 @@ class MonitorController extends Controller
 
     public function findName($name)
     {
-        $monitor = Monitor::where('name' , $name)->get();
+        $monitor = Monitor::where('name', 'LIKE', '%' . $name )->get();
 
         return response()
             ->json($monitor);

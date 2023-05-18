@@ -42,10 +42,13 @@ Route::post('updateMonitor', [MonitorController::class, "changeImg"]);//update
 Route::post('deleteMonitor', [MonitorController::class, "deleteMonitor"]);//delete
 Route::get('monitores', [MonitorController::class, "showAll"]);//read
 
+
+//Monitorias
 Route::get('monitorias', [MonitoriasController::class, "showAll"]);//read
 Route::get('qr/{phone_number}', [MonitoriasController::class, "qr"]);//read
 Route::get('name/{name}', [MonitoriasController::class, "findName"]);//read
 Route::get('monitorias/{idMonitor}', [MonitoriasController::class, "findMonitorias"]);//read
+Route::get('monitoriasName/{course}', [MonitoriasController::class, "findMonitoriasName"]);//read
 Route::post('registerMonitoria', [MonitoriasController::class, "addMonitoriaInfo"]);//read
 Route::post('modificarMonitoria', [MonitoriasController::class, "updateData"]);//read
 Route::post('deleteMonitoria/{id}', [MonitoriasController::class, "delete"]);//read
