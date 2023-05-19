@@ -47,11 +47,14 @@ Route::get('monitores', [MonitorController::class, "showAll"]);//read
 Route::get('monitorias', [MonitoriasController::class, "showAll"]);//read
 Route::get('qr/{phone_number}', [MonitoriasController::class, "qr"]);//read
 Route::get('name/{name}', [MonitoriasController::class, "findName"]);//read
-Route::get('monitorias/{idMonitor}', [MonitoriasController::class, "findMonitorias"]);//read
+Route::get('monitorias/{id}', [MonitoriasController::class, "findMonitoria"]);//read
 Route::get('monitoriasName/{course}', [MonitoriasController::class, "findMonitoriasName"]);//read
 Route::post('registerMonitoria', [MonitoriasController::class, "addMonitoriaInfo"]);//read
 Route::post('modificarMonitoria', [MonitoriasController::class, "updateData"]);//read
 Route::post('deleteMonitoria/{id}', [MonitoriasController::class, "delete"]);//read
+
+
+Route::post('imagen', [UserController::class, "uploadImg"]);//read
 
 Route::get('email', [UserController::class, "email"]);//read
 Route::get('/verify-email/{id}/{hash}', 'VerificationController@verify')->name('verification.verify');

@@ -114,16 +114,17 @@ class MonitoriasController extends Controller
             ->json(['status' => 'eliminado',]);
     }
 
-    public function findMonitorias($idMonitor)
+    public function findMonitoria($id)
     {
-        $monitoria = Monitoria::where('idMonitor', $idMonitor)->get();
+        $monitoria = Monitoria::findOrFail($id);
+        $monitor = Monitor::find($monitoria->idMonitor);
 
         return response()
-            ->json($monitoria);
+        ->json(['monitoria' => $monitoria,'monitor' => $monitor,]);
     }
     public function findMonitoriasName($course)
     {
-        $monitoria = Monitoria::where('course','LIKE', $course . '%' )->get();
+        $monitoria = Monitoria::where('course','LIKE','%' . $course . '%' )->get();
 
         return response()
             ->json($monitoria);
