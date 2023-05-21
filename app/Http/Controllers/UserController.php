@@ -104,7 +104,8 @@ class UserController extends Controller
             $monitor->save();
 
             return response()
-            ->json(['data' => $monitor,]);
+                ->json(['data' => $monitor,]);
+
         }
 
         $user->name = $request->name;
@@ -128,7 +129,10 @@ class UserController extends Controller
 
         if ($monitor) {
             $monitor->delete();
+<<<<<<< HEAD
 
+=======
+>>>>>>> 3d0a3b83b6f37776aa7046048cb669a42ece5c44
         }
 
         return response()
@@ -151,4 +155,26 @@ class UserController extends Controller
         return  response()
             ->json(['status' => 'eliminado',]);
     }
+<<<<<<< HEAD
+=======
+
+    public function uploadImg(Request $request)
+    {
+
+        if($request->hasfile('image'))
+        {
+            $file=$request->file('image');
+            $extension=$file->getClientOriginalExtension();
+            $filename=time().'.'.$extension;
+            $file->move('public/img_profile',$filename);
+            return $request;
+        }
+        else
+        {
+            return $request;
+        }
+
+        return response()->json(['response'=>['code'=>'200','message'=>'image uploaded successfull']]);
+    }
+>>>>>>> 3d0a3b83b6f37776aa7046048cb669a42ece5c44
 }

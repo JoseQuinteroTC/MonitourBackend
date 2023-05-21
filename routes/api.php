@@ -53,6 +53,12 @@ Route::post('registerMonitoria', [MonitoriasController::class, "addMonitoriaInfo
 Route::post('modificarMonitoria', [MonitoriasController::class, "updateData"]);//read
 Route::post('deleteMonitoria/{id}', [MonitoriasController::class, "delete"]);//read
 
+<<<<<<< HEAD
+=======
+
+Route::post('imagen', [UserController::class, "uploadImg"]);//read
+
+>>>>>>> 3d0a3b83b6f37776aa7046048cb669a42ece5c44
 Route::get('email', [UserController::class, "email"]);//read
 Route::get('/verify-email/{id}/{hash}', 'VerificationController@verify')->name('verification.verify');
 
