@@ -28,10 +28,13 @@ class MonitorController extends Controller
 
     public function addMonitorInfo(Request $request)
     {
+        $user = User::findOrFail($request->id);
 
         $validator = validator::make($request->all(), [
+
             'description' => 'required|string|max:255',
             'phone_number' => 'required|max:20',
+            'document' => 'required|max:20',
             'url_img_profile' => 'required|string|max:255',
         ]);
 
@@ -40,11 +43,39 @@ class MonitorController extends Controller
         }
 
         $monitor = Monitor::create([
+            'id' => $user->id,
+            'name' => $user->name,
+            'lastName' => $user->lastName,
+            'email' => $user->email,
             'description' => $request->description,
             'phone_number' => $request->phone_number,
-            'url_img_profile' => $request->url_img_profile
+            'document' => $request->document,
+            'url_img_profile' => $request->url_img_profile,
         ]);
 
+
+        return response()
+            ->json(['data' => $monitor,]);
+    }
+
+    public function updateData(Request $request)
+    {
+        $monitor = Monitor::findOrFail($request->id);
+
+        if ($monitor->email != $request->email) {
+            $validator = validator::make($request->all(), [
+                'email' => 'required|unique:users',
+            ]);
+            if ($validator->fails()) {
+                return response()->json("Ya existe un usuario con el correo ingresado", 401);
+            }
+        }
+
+
+        $monitor->email = $request->email;
+        $monitor->description = $request->description;
+        $monitor->phone_number = $request->phone_number;
+        $monitor->save();
 
         return response()
             ->json(['data' => $monitor,]);
@@ -68,5 +99,13 @@ class MonitorController extends Controller
 
         return response()
             ->json(['status' => 'eliminado',]);
+    }
+
+    public function findName($name)
+    {
+        $monitor = Monitor::where('name', 'LIKE', '%' . $name )->get();
+
+        return response()
+            ->json($monitor);
     }
 }

@@ -14,9 +14,13 @@ return new class extends Migration
         Schema::create('monitors', function (Blueprint $table) {
 
             $table->id('id');
+            $table->string('name');
+            $table->string('lastName');
+            $table->string('email')->unique();
             $table->string('description');
             $table->bigInteger('phone_number');
-            $table->binary('url_img_profile');
+            $table->bigInteger('document');
+            $table->string('url_img_profile');
             $table->timestamps();
 
         });
