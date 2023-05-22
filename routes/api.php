@@ -45,22 +45,24 @@ Route::get('monitores', [MonitorController::class, "showAll"]);//read
 
 //Monitorias
 Route::get('monitorias', [MonitoriasController::class, "showAll"]);//read
-Route::get('qr/{phone_number}', [MonitoriasController::class, "qr"]);//read
+Route::get('qr/{id}', [MonitoriasController::class, "qr"]);//read
 Route::get('name/{name}', [MonitoriasController::class, "findName"]);//read
 Route::get('monitorias/{id}', [MonitoriasController::class, "findMonitoria"]);//read
+Route::get('monitorias/monitor/{id}', [MonitoriasController::class, "findMonitoriaByMonitor"]);//read
 Route::get('monitoriasName/{course}', [MonitoriasController::class, "findMonitoriasName"]);//read
+Route::get('monitorias/recomendadas/{course}', [MonitoriasController::class, "findMonitoriaByCourse"]);//read
 Route::post('registerMonitoria', [MonitoriasController::class, "addMonitoriaInfo"]);//read
 Route::post('modificarMonitoria', [MonitoriasController::class, "updateData"]);//read
 Route::post('deleteMonitoria/{id}', [MonitoriasController::class, "delete"]);//read
 
-<<<<<<< HEAD
-=======
 
-Route::post('imagen', [UserController::class, "uploadImg"]);//read
 
->>>>>>> 3d0a3b83b6f37776aa7046048cb669a42ece5c44
-Route::get('email', [UserController::class, "email"]);//read
-Route::get('/verify-email/{id}/{hash}', 'VerificationController@verify')->name('verification.verify');
+Route::post('img', [UserController::class, "saveImg"]);//read
+
+
+Route::get('email/{nombre}', [UserController::class, "sendResetLinkEmail"]);//read
+Route::get('resetPassword/{pin}', [UserController::class, "resetPassword"]);//read
+
 
 
 //Other

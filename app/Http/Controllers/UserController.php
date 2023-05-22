@@ -1,6 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Http\Controllers\foto;
+use App\Http\Controllers\Password;
+
+
 
 use App\Models\User;
 use App\Models\Monitor;
@@ -11,8 +15,11 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use \stdClass;
 use App\Mail\WelcomeMail;
+use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\message;
+
+use App\changePassword;
 
 
 class UserController extends Controller
@@ -129,52 +136,62 @@ class UserController extends Controller
 
         if ($monitor) {
             $monitor->delete();
-<<<<<<< HEAD
 
-=======
->>>>>>> 3d0a3b83b6f37776aa7046048cb669a42ece5c44
         }
 
         return response()
             ->json(['status' => 'eliminado',]);
     }
 
-    public function email(Request $request)
+    public function saveImg(Request $request)
     {
-        // Código para registrar al usuario
-        // ...
+        if ($request->hasFile('foto')) {
+            $foto = $request->file('foto');
 
-        // Enviar correo de bienvenida utilizando una plantilla HTML
-        $user = User::find($request->id);
-        $data = array('name' => "hola");
-        Mail::send('emails.welcome', $data, function ($message) use ($user) {
-            $message->to("monitour04@gmail.com", "hola")
-                ->subject('Bienvenido a mi sitio web');
-        });
+            $nombreArchivo = $request->id.'.'.$foto->getClientOriginalExtension();
 
-        return  response()
-            ->json(['status' => 'eliminado',]);
-    }
-<<<<<<< HEAD
-=======
+            // Guardar la foto en almacenamiento local
+            $ruta = $foto->storeAs('profile_photo', $nombreArchivo,'public_html');
 
-    public function uploadImg(Request $request)
-    {
+            $monitor = Monitor::where('id', $request->id)->first();
+            $monitor->url_img_profile = $nombreArchivo;
+            $monitor->save();
 
-        if($request->hasfile('image'))
-        {
-            $file=$request->file('image');
-            $extension=$file->getClientOriginalExtension();
-            $filename=time().'.'.$extension;
-            $file->move('public/img_profile',$filename);
-            return $request;
-        }
-        else
-        {
-            return $request;
+            return response()
+            ->json("Foto guardada exitosamente");
         }
 
-        return response()->json(['response'=>['code'=>'200','message'=>'image uploaded successfull']]);
+        return response()
+        ->json( "No se ha proporcionado ninguna foto",404);
     }
->>>>>>> 3d0a3b83b6f37776aa7046048cb669a42ece5c44
+
+    public function sendResetLinkEmail($email)
+    {
+
+        $user = User::where('email',$email)->first();
+
+        $pin = rand(100000, 999999);
+
+        Mail::to($email)->send(new changePassword($user->name , $pin));
+
+        $user->pin = $pin;
+        $user->save();
+    }
+
+    public function resetPassword($pin)
+    {
+        $user = User::where('pin',$pin)->first();
+
+        echo($user->name);
+
+        // if ($user->pin == $request->pin) {
+        //     return response()
+        //     ->json( "Pin valido");
+        // }
+
+        return response()
+        ->json( "Pin incorrecto",404);
+    }
+
+
 }

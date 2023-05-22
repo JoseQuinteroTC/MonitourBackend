@@ -34,6 +34,12 @@ return [
     */
 
     'mailers' => [
+
+        'from' => [
+            'address' => 'support@monitour.online',
+            'name' => 'Support MoniTour',
+        ],
+
         'smtp' => [
             'transport' => 'smtp',
             'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
@@ -98,8 +104,8 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
-        'name' => env('MAIL_FROM_NAME', 'Example'),
+        'address' => env('MAIL_FROM_ADDRESS', 'support@monitour.online'),
+        'name' => env('MAIL_FROM_NAME', 'Support'),
     ],
 
     /*

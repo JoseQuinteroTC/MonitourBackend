@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use stdClass;
 use App\Http\Controllers\str;
 use App\Http\Controllers\mail;
+use App\Http\Controllers\Arr;
 use App\Models\Monitor;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
@@ -51,7 +52,7 @@ class MonitoriasController extends Controller
             'course' => 'required|string|max:255',
             'price' => 'required|max:20',
             'idMonitor' => 'required|max:20',
-            'description' => 'required|string|max:255',
+            'description' => 'required|string|max:1000',
             'modality' => 'required|string|max:255',
         ]);
 
@@ -60,7 +61,7 @@ class MonitoriasController extends Controller
         }
 
         $monitoria = Monitoria::create([
-            'monitor' => $monitor->name. ' '. $monitor->lastName ,
+            'monitor' => $monitor->name . ' ' . $monitor->lastName,
             'idMonitor' => $request->idMonitor,
             'course' => $request->course,
             'price' => $request->price,
@@ -82,12 +83,11 @@ class MonitoriasController extends Controller
 
         if ($monitoria->email != $request->email) {
             $validator = validator::make($request->all(), [
-            'course' => 'required|string|max:255',
-            'price' => 'required|max:20',
-            'description' => 'required|string|max:255',
-            'modality' => 'required|string|max:255',
+                'course' => 'required|string|max:255',
+                'price' => 'required|max:20',
+                'description' => 'required|string|max:1000',
+                'modality' => 'required|string|max:255',
             ]);
-
         }
 
         $monitoria->course = $request->course;
@@ -100,9 +100,15 @@ class MonitoriasController extends Controller
             ->json(['data' => $monitoria,]);
     }
 
-    public function qr($phone_number)
+    public function qr($id)//id de la monitoria
     {
-        return response(QrCode::size(300)->generate('http://Wa.me/+57' . "" . $phone_number));
+        $monitoria = Monitoria::findOrFail($id);
+        $monitor = Monitor::find($monitoria->idMonitor);
+
+        $monitoria->request = $monitoria->request + 1;
+        $monitoria->save();
+
+        return response(QrCode::size(300)->generate('http://Wa.me/+57' . "" . $monitor->phone_number));
     }
 
     public function delete($id)
@@ -114,17 +120,40 @@ class MonitoriasController extends Controller
             ->json(['status' => 'eliminado',]);
     }
 
-    public function findMonitoria($id)
+    public function findMonitoria($id) //id de la monitoria
     {
         $monitoria = Monitoria::findOrFail($id);
         $monitor = Monitor::find($monitoria->idMonitor);
 
+        $monitoria->views = $monitoria->views + 1;
+        $monitoria->save();
+
         return response()
-        ->json(['monitoria' => $monitoria,'monitor' => $monitor,]);
+            ->json(['monitoria' => $monitoria, 'monitor' => $monitor,]);
     }
+
+    public function findMonitoriaByMonitor($id) //id del monitor
+    {
+        $monitor = Monitor::find($id);
+        $monitoria = Monitoria::where('idMonitor', $monitor->id)->get();
+
+        return response()
+            ->json($monitoria);
+    }
+
+    // public function findMonitoriaByCourse($course) //id de la monitoria
+    // {
+    //     $monitorias = Monitoria::where('course', 'LIKE', $course . '%')->get();
+
+    //     $monitoriasRecomendadas = Arr::map($monitorias, $monitor = Monitor::find($monitorias->id));
+
+    //     return response()
+    //         ->json($monitoriasRecomendadas);
+    // }
+
     public function findMonitoriasName($course)
     {
-        $monitoria = Monitoria::where('course','LIKE','%' . $course . '%' )->get();
+        $monitoria = Monitoria::where('course', 'LIKE', '%' . $course . '%')->get();
 
         return response()
             ->json($monitoria);
