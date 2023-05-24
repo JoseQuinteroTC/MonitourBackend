@@ -49,7 +49,10 @@ Route::get('qr/{id}', [MonitoriasController::class, "qr"]);//read
 Route::get('name/{name}', [MonitoriasController::class, "findName"]);//read
 Route::get('monitorias/{id}', [MonitoriasController::class, "findMonitoria"]);//read
 Route::get('monitorias/monitor/{id}', [MonitoriasController::class, "findMonitoriaByMonitor"]);//read
+
 Route::get('monitoriasName/{course}', [MonitoriasController::class, "findMonitoriasName"]);//read
+Route::get('monitoriasRecomendadas/{course}', [MonitoriasController::class, "MonitoriasRelated"]);//read
+
 Route::get('monitorias/recomendadas/{course}', [MonitoriasController::class, "findMonitoriaByCourse"]);//read
 Route::post('registerMonitoria', [MonitoriasController::class, "addMonitoriaInfo"]);//read
 Route::post('modificarMonitoria', [MonitoriasController::class, "updateData"]);//read
@@ -61,7 +64,12 @@ Route::post('img', [UserController::class, "saveImg"]);//read
 
 
 Route::get('email/{nombre}', [UserController::class, "sendResetLinkEmail"]);//read
-Route::get('resetPassword/{pin}', [UserController::class, "resetPassword"]);//read
+
+Route::post('reset', [UserController::class, "validatePin"]);//read
+
+Route::post('resetPassword', [UserController::class, "resetPassword"]);//read
+
+
 
 
 

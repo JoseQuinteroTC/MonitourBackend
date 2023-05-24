@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Http\Controllers\foto;
 use App\Http\Controllers\Password;
 
@@ -93,7 +94,7 @@ class UserController extends Controller
         $monitor = Monitor::where('id', $request->id)->first();
 
 
-        if ($user->email != $request->email || $monitor->email != $request->email) {
+        if ($user->email != $request->email ) {
             $validator = validator::make($request->all(), [
                 'email' => 'required|unique:users',
             ]);
@@ -112,7 +113,6 @@ class UserController extends Controller
 
             return response()
                 ->json(['data' => $monitor,]);
-
         }
 
         $user->name = $request->name;
@@ -136,7 +136,6 @@ class UserController extends Controller
 
         if ($monitor) {
             $monitor->delete();
-
         }
 
         return response()
@@ -148,50 +147,66 @@ class UserController extends Controller
         if ($request->hasFile('foto')) {
             $foto = $request->file('foto');
 
-            $nombreArchivo = $request->id.'.'.$foto->getClientOriginalExtension();
+            $nombreArchivo = $request->id . '.' . $foto->getClientOriginalExtension();
 
             // Guardar la foto en almacenamiento local
-            $ruta = $foto->storeAs('profile_photo', $nombreArchivo,'public_html');
+            $ruta = $foto->storeAs('profile_photo', $nombreArchivo, 'public_html');
 
             $monitor = Monitor::where('id', $request->id)->first();
             $monitor->url_img_profile = $nombreArchivo;
             $monitor->save();
 
             return response()
-            ->json("Foto guardada exitosamente");
+                ->json("Foto guardada exitosamente");
         }
 
         return response()
-        ->json( "No se ha proporcionado ninguna foto",404);
+            ->json("No se ha proporcionado ninguna foto", 404);
     }
 
     public function sendResetLinkEmail($email)
     {
 
-        $user = User::where('email',$email)->first();
+        $user = User::where('email', $email)->first();
 
         $pin = rand(100000, 999999);
 
-        Mail::to($email)->send(new changePassword($user->name , $pin));
+        if ($user) {
 
-        $user->pin = $pin;
-        $user->save();
-    }
+            Mail::to($email)->send(new changePassword ($user->name, $user->lastName, $pin));
 
-    public function resetPassword($pin)
-    {
-        $user = User::where('pin',$pin)->first();
-
-        echo($user->name);
-
-        // if ($user->pin == $request->pin) {
-        //     return response()
-        //     ->json( "Pin valido");
-        // }
+            $user->pin = $pin;
+            $user->save();
+            return response()
+            ->json("Correo enviado", 200);
+        }
 
         return response()
-        ->json( "Pin incorrecto",404);
+            ->json("correo no existe", 404);
     }
 
+    public function validatePin(Request $request)
+    {
+        $user = User::where('email', $request->email)->first();
 
+
+        if ($user->pin == $request->pin) {
+            return response()
+                ->json("Pin valido");
+        }
+
+        return response()
+            ->json("Pin invalido", 404);
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $user = User::where('email', $request->email)->first();
+
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        return response()
+            ->json(['data' => $user,]);
+    }
 }

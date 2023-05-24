@@ -18,6 +18,7 @@ class Monitoria extends Model
         'modality',
         'views',
         'request',
+        'url_img_profile',
 
     ];
 

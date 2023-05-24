@@ -32,10 +32,9 @@ class MonitorController extends Controller
 
         $validator = validator::make($request->all(), [
 
-            'description' => 'required|string|max:1000',
+            'description' => 'required|string',
             'phone_number' => 'required|max:20',
             'document' => 'required|max:20',
-            'url_img_profile' => 'required|string|max:255',
         ]);
 
         if ($validator->fails()) {
@@ -50,7 +49,7 @@ class MonitorController extends Controller
             'description' => $request->description,
             'phone_number' => $request->phone_number,
             'document' => $request->document,
-            'url_img_profile' => $request->url_img_profile,
+            'url_img_profile' => '',
         ]);
 
 

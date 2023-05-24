@@ -15,6 +15,7 @@ return new class extends Migration
 
             $table->id();
             $table->string('monitor');//x
+            $table->string('url_img_profile');//x
             $table->integer('idMonitor');//x
             $table->integer('views');//x
             $table->integer('request');//x

@@ -15,17 +15,19 @@ class changePassword extends Mailable
     use Queueable, SerializesModels;
 
 
-    public $nombre;
+    public $name;
     public $pin;
+    public $lastName;
 
 
-    public function __construct($nombre,$pin)
+    public function __construct($name,$lastName,$pin)
     {
-        $this->nombre = $nombre;
+        $this->name = $name;
         $this->pin = $pin;
+        $this->lastName = $lastName;
     }
     public function build()
     {
-        return $this->view('resetPassword');
+        return $this->subject("Reestablecer contraseña")->view('resetPassword');
     }
 }

@@ -52,7 +52,7 @@ class MonitoriasController extends Controller
             'course' => 'required|string|max:255',
             'price' => 'required|max:20',
             'idMonitor' => 'required|max:20',
-            'description' => 'required|string|max:1000',
+            'description' => 'required|string',
             'modality' => 'required|string|max:255',
         ]);
 
@@ -69,6 +69,7 @@ class MonitoriasController extends Controller
             'modality' => $request->modality,
             'views' => 0,
             'request' => 0,
+            'url_img_profile'  => $monitor->url_img_profile,
 
         ]);
 
@@ -85,8 +86,8 @@ class MonitoriasController extends Controller
             $validator = validator::make($request->all(), [
                 'course' => 'required|string|max:255',
                 'price' => 'required|max:20',
-                'description' => 'required|string|max:1000',
-                'modality' => 'required|string|max:255',
+                'description' => 'required|string',
+                'modality' => 'required|string',
             ]);
         }
 
@@ -158,4 +159,14 @@ class MonitoriasController extends Controller
         return response()
             ->json($monitoria);
     }
+
+    public function MonitoriasRelated($course)
+    {
+        $monitoria = Monitoria::where('course', 'LIKE', '%' . $course . '%')->take(6)->get();
+
+        return response()
+            ->json($monitoria);
+    }
+
+
 }
